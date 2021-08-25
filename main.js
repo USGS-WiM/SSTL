@@ -15,6 +15,27 @@ $(document).ready(function () {
       //console.log(data);
       $(data.data).each(function (index, site) {
         //console.log(site);
+
+        var row =
+          "<tr><td>" +
+          site.cameraDescription +
+          "</td><td>" +
+          site.state +
+          "</td><td>" +
+          site.usgsSiteNumber +
+          "</td><td>" +
+          site.lastProcessedDateTime +
+          "</td><td>" +
+          site.imagesBatchSize +
+          "</td></tr>";
+
+        $(".tableBody")
+          .append(row)
+          .on("click", "tr", site._id, function () {
+            //not working correctly: fires for every tr element in the tableBody
+            //openPopup(site._id);
+          });
+
         if (site.nwis_values) {
           var cameraID = site._id;
           var latlngArr = [site.nwis_values.lat, site.nwis_values.lng];
@@ -91,7 +112,6 @@ var map = L.map("map", {
 });
 
 //create markercluster group
-
 //Dev Note for Styling clusters: set className to .streamSite or .nonStream to change symbology
 var markerClusterGroup = L.markerClusterGroup({
   showCoverageOnHover: false,
@@ -130,5 +150,9 @@ var baseMaps = {
   Satellite: satellite,
   Topographic: topo,
 };
+
+function openPopup(siteId) {
+  console.log("clicked", siteId);
+}
 
 L.control.layers(baseMaps, overlayLayers).addTo(map);
