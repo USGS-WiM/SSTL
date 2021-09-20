@@ -26,12 +26,14 @@
             <div>
               <a :href="caller.cameraURL_full" target="_blank"
                 ><video
+                  id="sampleMovie"
                   autoplay
                   controls
                   width="250"
                   title="Click to open full-size video"
                 >
                   <source
+                    id="myMovie"
                     :src="caller.cameraURL_small"
                     type="video/mp4"
                   /></video
@@ -240,6 +242,8 @@ export default {
     openPopUp(latLng, caller) {
       this.caller = caller;
       this.$refs.features.mapObject.openPopup(latLng);
+      //If you don't reload the video, the old one starts playing
+      document.getElementById("sampleMovie").load();
     },
   },
 };
