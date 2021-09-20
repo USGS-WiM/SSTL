@@ -4,7 +4,11 @@
     <v-app-bar app>
       <v-app-bar-nav-icon
         @click="drawerState = !drawerState"
-      ></v-app-bar-nav-icon>
+      ></v-app-bar-nav-icon
+      ><img
+        style="height: 90%; margin-right: 20px; "
+        src="./assets/USGS_Green_web.png"
+      />
       <v-toolbar-title>Storm Summary Time-Lapse</v-toolbar-title>
     </v-app-bar>
 
