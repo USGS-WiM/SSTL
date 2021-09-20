@@ -19,8 +19,25 @@
             :visible="marker.visible"
             :lat-lng="marker.position"
             :icon="nwisIcon"
-          />
-          <l-popup>"marker.id"</l-popup>
+            ><l-popup>
+              <div>
+                <h3>{{ marker.cameraDescription }}</h3>
+                <div>
+                  <a :href="marker.cameraURL_full" target="_blank"
+                    ><video
+                      autoplay
+                      controls
+                      width="250"
+                      title="Click to open full-size video"
+                    >
+                      <source
+                        :src="marker.cameraURL_small"
+                        type="video/mp4"
+                      /></video
+                  ></a>
+                </div>
+              </div> </l-popup
+          ></l-marker>
         </l-layer-group>
         <l-marker :lat-lng="withPopup">
           <l-popup>
@@ -74,8 +91,8 @@ export default {
   },
   data() {
     return {
-      zoom: 13,
-      center: latLng(47.41322, -1.219482),
+      zoom: 5,
+      center: latLng(37.0902, -95.71),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -120,6 +137,12 @@ export default {
           position: null,
           draggable: true,
           visible: true,
+          cameraDescription: site.cameraDescription,
+          usgsSiteNumber: site.usgsSiteNumber,
+          videoNameBase: site.videoNameBase,
+          lastProcessedDateTime: site.lastProcessedDateTime,
+          cameraURL_full: "",
+          cameraURL_small: "",
         };
         tempSiteArr.position = {
           lat: site.nwis_values.lat,
@@ -128,39 +151,23 @@ export default {
         tempSiteArr.id = cameraID;
         markerArray.push(tempSiteArr);
         //console.log("markerArray", markerArray);
+        let cameraURL =
+          "https://apps.usgs.gov/sstl/media/cameras/" +
+          site.usgsSiteNumber +
+          "_" +
+          site.videoNameBase +
+          "/" +
+          site.videoNameBase;
+        tempSiteArr.cameraURL_full = cameraURL + "_full.webm";
+        tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
+
+        console.log("cameraURL", tempSiteArr.cameraURL);
       }
     }
     console.log("markerArray", markerArray);
     this.markers = markerArray;
 
     console.log("this.markers", this.markers);
-
-    /* let HttpClient = function() {
-      this.get = function(aUrl, aCallback) {
-        let anHttpRequest = new XMLHttpRequest();
-        anHttpRequest.onreadystatechange = function() {
-          if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-            aCallback(anHttpRequest.responseText);
-        };
-        anHttpRequest.open("GET", aUrl, true);
-        anHttpRequest.send(null);
-      };
-    };
-    let client = new HttpClient();
-    client.get(
-      "https://apps.usgs.gov/sstl/php/getAllEnabledCameras.php",
-      function(response) {
-        let cameraJSON = JSON.parse(response);
-        for (let i = 0; i < cameraJSON.length; i++) {
-          let site = cameraJSON.data[i];
-          if (site.nwis_values) {
-            let cameraID = site.id;
-            console.log("cameraID", cameraID);
-            this.testThing = 3;
-          }
-        }
-      }
-    ); */
   },
   methods: {
     zoomUpdate(zoom) {
