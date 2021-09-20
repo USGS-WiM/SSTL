@@ -48,7 +48,6 @@
           </div></l-popup
         >
       </l-feature-group>
-
       <l-marker
         v-for="marker in markers"
         :key="marker.id"
