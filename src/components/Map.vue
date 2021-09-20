@@ -65,10 +65,24 @@
         ></v-text-field>
       </v-card-title>
       <v-data-table
+        v-model="selectedRows"
         :headers="headers"
         :items="markers"
         :search="search"
-      ></v-data-table>
+        @click:row="clickRow(markers)"
+        ><template v-slot:item="{ item }">
+          <tr
+            :class="selectedRows.indexOf(item.id) > -1 ? 'cyan' : ''"
+            @click="rowClicked(item)"
+          >
+            <td>{{ item.cameraName }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.state }}</td>
+            <td>{{ item.lastProcessedDateTime }}</td>
+            <td>{{ item.imagesBatchSize }}</td>
+          </tr>
+        </template>
+      </v-data-table>
     </v-card>
   </v-main>
 </template>
@@ -119,6 +133,8 @@ export default {
       },
       showMap: true,
       search: "",
+
+      selectedRows: [],
       headers: [
         {
           text: "Camera Name",
@@ -217,6 +233,18 @@ export default {
     getLatLng: function(event) {
       this.lat = parseFloat(event.latlng.lat).toFixed(6);
       this.long = parseFloat(event.latlng.lng).toFixed(6);
+    },
+    clickRow(test) {
+      console.log("test", test);
+      console.log("row clicked");
+    },
+    rowClicked(a) {
+      console.log("a", a);
+      alert("Alert! \n" + a.cameraName);
+    },
+    openPopUp(latLng, caller) {
+      this.caller = caller;
+      this.$refs.features.mapObject.openPopup(latLng);
     },
   },
 };
