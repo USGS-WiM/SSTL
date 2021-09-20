@@ -45,7 +45,9 @@
       "parser": "babel-eslint",
       "interpolationAsNonHTML": false
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",
