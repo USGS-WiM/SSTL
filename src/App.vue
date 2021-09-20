@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <cutomthing></cutomthing>
     <Sidebar></Sidebar>
     <v-app-bar app>
       <v-app-bar-nav-icon

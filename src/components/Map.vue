@@ -1,85 +1,75 @@
 <template>
   <v-main>
-    <div style="height: 100%; width: 100%">
-      <l-map
-        v-if="showMap"
-        :zoom="zoom"
-        :center="center"
-        :options="mapOptions"
-        style="height: 80%"
-        @update:center="centerUpdate"
-        @update:zoom="zoomUpdate"
-        @mousemove="getLatLng"
-      >
-        <l-tile-layer :url="url" :attribution="attribution" />
+    <l-map
+      v-if="showMap"
+      :zoom="zoom"
+      :center="center"
+      :options="mapOptions"
+      style="height: 80%"
+      @update:center="centerUpdate"
+      @update:zoom="zoomUpdate"
+      @mousemove="getLatLng"
+    >
+      <l-tile-layer :url="url" :attribution="attribution" />
 
-        <l-control position="bottomleft">
-          <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
-        </l-control>
-        <l-control-scale position="bottomleft" :metric="true" />
-        <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
-        <l-layer-group layer-type="overlay" name="Markers" :visible="true">
-          <l-marker
-            v-for="marker in markers"
-            :key="marker.id"
-            :visible="marker.visible"
-            :lat-lng="marker.position"
-            :icon="nwisIcon"
-            ><l-popup>
+      <l-control position="bottomleft">
+        <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
+      </l-control>
+      <l-control-scale position="bottomleft" :metric="true" />
+      <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
+      <l-layer-group layer-type="overlay" name="Markers" :visible="true">
+        <l-marker
+          v-for="marker in markers"
+          :key="marker.id"
+          :visible="marker.visible"
+          :lat-lng="marker.position"
+          :icon="nwisIcon"
+          ><l-popup>
+            <div>
+              <h3>{{ marker.cameraName }}</h3>
+              <h4>USGS Site: {{ marker.usgsSiteNumber }}</h4>
+              <h4>{{ marker.cameraDescription }}</h4>
               <div>
-                <h3>{{ marker.cameraName }}</h3>
-                <h4>USGS Site: {{ marker.usgsSiteNumber }}</h4>
-                <h4>{{ marker.cameraDescription }}</h4>
+                <a :href="marker.cameraURL_full" target="_blank"
+                  ><video
+                    autoplay
+                    controls
+                    width="250"
+                    title="Click to open full-size video"
+                  >
+                    <source
+                      :src="marker.cameraURL_small"
+                      type="video/mp4"
+                    /></video
+                ></a>
+                <div>Last updated at: {{ marker.lastProcessedDateTime }}</div>
                 <div>
-                  <a :href="marker.cameraURL_full" target="_blank"
-                    ><video
-                      autoplay
-                      controls
-                      width="250"
-                      title="Click to open full-size video"
-                    >
-                      <source
-                        :src="marker.cameraURL_small"
-                        type="video/mp4"
-                      /></video
-                  ></a>
-                  <div>Last updated at: {{ marker.lastProcessedDateTime }}</div>
-                  <div>
-                    <a :href="marker.dashboardURL" target="_blank"
-                      >Open Dashboard</a
-                    >
-                  </div>
+                  <a :href="marker.dashboardURL" target="_blank"
+                    >Open Dashboard</a
+                  >
                 </div>
               </div>
-            </l-popup></l-marker
-          >
-        </l-layer-group>
-        <l-marker :lat-lng="withPopup">
-          <l-popup>
-            <div @click="innerClick">
-              I am a popup
-              <p v-show="showParagraph">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-                sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-                Donec finibus semper metus id malesuada.
-              </p>
             </div>
-          </l-popup>
-        </l-marker>
-        <l-marker :lat-lng="withTooltip">
-          <l-tooltip :options="{ permanent: true, interactive: true }">
-            <div @click="innerClick">
-              I am a tooltip
-              <p v-show="showParagraph">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-                sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-                Donec finibus semper metus id malesuada.
-              </p>
-            </div>
-          </l-tooltip>
-        </l-marker>
-      </l-map>
-    </div>
+          </l-popup></l-marker
+        >
+      </l-layer-group>
+    </l-map>
+    <v-card>
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="markers"
+        :search="search"
+      ></v-data-table>
+    </v-card>
   </v-main>
 </template>
 
@@ -90,7 +80,6 @@ import {
   LTileLayer,
   LMarker,
   LPopup,
-  LTooltip,
   LLayerGroup,
   LControl,
   LControlScale,
@@ -103,7 +92,6 @@ export default {
     LTileLayer,
     LMarker,
     LPopup,
-    LTooltip,
     LLayerGroup,
     LControl,
     LControlScale,
@@ -130,6 +118,19 @@ export default {
         zoomSnap: 0.5,
       },
       showMap: true,
+      search: "",
+      headers: [
+        {
+          text: "Camera Name",
+          align: "start",
+          sortable: true,
+          value: "cameraName",
+        },
+        { text: "USGS Site", value: "id" },
+        { text: "State", value: "state" },
+        { text: "Last Processed Time", value: "lastProcessedDateTime" },
+        { text: "Img Batch Size", value: "imagesBatchSize" },
+      ],
     };
   },
   //if you want to load a geojson layer
@@ -166,6 +167,8 @@ export default {
           cameraURL_full: "",
           cameraURL_small: "",
           cameraName: "",
+          state: site.state,
+          imagesBatchSize: site.imagesBatchSize,
         };
         tempSiteArr.position = {
           lat: site.nwis_values.lat,
