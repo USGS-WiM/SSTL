@@ -12,7 +12,6 @@
       />
       <v-toolbar-title>Storm Summary Time-Lapse</v-toolbar-title>
     </v-app-bar>
-
     <Map></Map>
   </v-app>
 </template>

@@ -151,7 +151,6 @@ export default {
         center: [],
       },
       search: "",
-
       selectedRows: [],
       headers: [
         {
@@ -167,24 +166,13 @@ export default {
       ],
     };
   },
-  //if you want to load a geojson layer
   async created() {
-    // const response = await fetch(
-    //   "https://stn.wim.usgs.gov/STNServices/SensorViews.geojson?ViewType=baro_view&"
-    //);
-    // this.geojson = await response.json();
-    // console.log("this.geojson", this.geojson);
-
     let markerArray = [];
-
     const response2 = await fetch(
       "https://apps.usgs.gov/sstl/php/getAllEnabledCameras.php"
     );
     let cameraJSON = await response2.json();
-
-    console.log("cameraJSON", cameraJSON);
     for (let i = 0; i < cameraJSON.data.length; i++) {
-      // console.log("cameraJSON.data[i]", cameraJSON.data[i]);
       let site = cameraJSON.data[i];
       if (site.nwis_values) {
         let cameraID = site._id;
@@ -211,7 +199,6 @@ export default {
         };
         tempSiteArr.id = cameraID;
         markerArray.push(tempSiteArr);
-        //console.log("markerArray", markerArray);
         let cameraURL =
           "https://apps.usgs.gov/sstl/media/cameras/" +
           site.usgsSiteNumber +
@@ -229,13 +216,9 @@ export default {
           site.usgsSiteNumber +
           "_" +
           site.videoNameBase;
-        console.log("cameraURL", tempSiteArr.dashboardURL);
       }
     }
-    console.log("markerArray", markerArray);
     this.markers = markerArray;
-
-    console.log("this.markers", this.markers);
   },
   methods: {
     zoomUpdate(zoom) {
@@ -254,27 +237,9 @@ export default {
       this.lat = parseFloat(event.latlng.lat).toFixed(6);
       this.long = parseFloat(event.latlng.lng).toFixed(6);
     },
-    clickRow(test) {
-      console.log("test", test);
-      console.log("row clicked");
-    },
-    rowClicked(a) {
-      console.log("a", a);
-      alert("Alert! \n" + a.cameraName);
-    },
     openPopUp(latLng, caller) {
-      /*   this.caller.cameraURL_full = caller.cameraURL_full;
-      this.caller.cameraURL_small = caller.cameraURL_small;
-      this.caller.cameraName = caller.cameraName;
-      this.caller.usgsSiteNumber = caller.usgsSiteNumber;
-      this.caller.cameraDescription = caller.cameraDescription;
-      this.caller.lastProcessedDateTime = caller.lastProcessedDateTime;
-      this.caller.cameraURL = caller.cameraURL;
-      this.caller.dashboardURL = caller.dashboardURL;
-      this.caller.id = caller.id; */
       this.caller = caller;
       this.$refs.features.mapObject.openPopup(latLng);
-      console.log("this.caller.cameraURL_full", this.caller.cameraURL_full);
     },
   },
 };
