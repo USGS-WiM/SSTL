@@ -2,8 +2,10 @@
   <v-app>
     <Sidebar></Sidebar>
     <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawerState = !drawerState"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-app-bar-nav-icon
+        @click="drawerState = !drawerState"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>Storm Summary Time-Lapse</v-toolbar-title>
     </v-app-bar>
 
     <Map></Map>
@@ -21,8 +23,12 @@ export default {
   },
   computed: {
     drawerState: {
-      get () { return this.$store.getters.drawerState },
-      set (v) { return this.$store.commit('toggleDrawerState', v) }
+      get() {
+        return this.$store.getters.drawerState;
+      },
+      set(v) {
+        return this.$store.commit("toggleDrawerState", v);
+      },
     },
   },
 };

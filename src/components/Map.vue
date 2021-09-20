@@ -9,8 +9,14 @@
         style="height: 80%"
         @update:center="centerUpdate"
         @update:zoom="zoomUpdate"
+        @mousemove="getLatLng"
       >
         <l-tile-layer :url="url" :attribution="attribution" />
+
+        <l-control position="bottomleft">
+          <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
+        </l-control>
+        <l-control-scale position="bottomleft" :metric="true" />
         <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
         <l-layer-group layer-type="overlay" name="Markers" :visible="true">
           <l-marker
@@ -86,6 +92,8 @@ import {
   LPopup,
   LTooltip,
   LLayerGroup,
+  LControl,
+  LControlScale,
 } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 export default {
@@ -97,10 +105,14 @@ export default {
     LPopup,
     LTooltip,
     LLayerGroup,
+    LControl,
+    LControlScale,
   },
   data() {
     return {
       zoom: 5,
+      lat: 37.0902,
+      long: -95.71,
       center: latLng(37.0902, -95.71),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
@@ -198,6 +210,10 @@ export default {
     },
     innerClick() {
       alert("Click!");
+    },
+    getLatLng: function(event) {
+      this.lat = parseFloat(event.latlng.lat).toFixed(6);
+      this.long = parseFloat(event.latlng.lng).toFixed(6);
     },
   },
 };
