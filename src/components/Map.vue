@@ -21,7 +21,9 @@
             :icon="nwisIcon"
             ><l-popup>
               <div>
-                <h3>{{ marker.cameraDescription }}</h3>
+                <h3>{{ marker.cameraName }}</h3>
+                <h4>USGS Site: {{ marker.usgsSiteNumber }}</h4>
+                <h4>{{ marker.cameraDescription }}</h4>
                 <div>
                   <a :href="marker.cameraURL_full" target="_blank"
                     ><video
@@ -143,6 +145,7 @@ export default {
           lastProcessedDateTime: site.lastProcessedDateTime,
           cameraURL_full: "",
           cameraURL_small: "",
+          cameraName: "",
         };
         tempSiteArr.position = {
           lat: site.nwis_values.lat,
@@ -160,8 +163,10 @@ export default {
           site.videoNameBase;
         tempSiteArr.cameraURL_full = cameraURL + "_full.webm";
         tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
+        let editedCameraName = site.cameraName.replace(/_/g, " ");
+        tempSiteArr.cameraName = editedCameraName;
 
-        console.log("cameraURL", tempSiteArr.cameraURL);
+        console.log("tempSiteArr.cameraName", tempSiteArr.cameraName);
       }
     }
     console.log("markerArray", markerArray);
