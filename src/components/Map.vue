@@ -17,42 +17,44 @@
       </l-control>
       <l-control-scale position="bottomleft" :metric="true" />
       <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
-      <l-layer-group layer-type="overlay" name="Markers" :visible="true">
-        <l-marker
-          v-for="marker in markers"
-          :key="marker.id"
-          :visible="marker.visible"
-          :lat-lng="marker.position"
-          :icon="nwisIcon"
-          ><l-popup>
+      <l-feature-group ref="features">
+        <l-popup>
+          <div>
+            <h3>{{ caller.cameraName }}</h3>
+            <h4>USGS Site: {{ caller.usgsSiteNumber }}</h4>
+            <h4>{{ caller.cameraDescription }}</h4>
             <div>
-              <h3>{{ marker.cameraName }}</h3>
-              <h4>USGS Site: {{ marker.usgsSiteNumber }}</h4>
-              <h4>{{ marker.cameraDescription }}</h4>
+              <a :href="caller.cameraURL_full" target="_blank"
+                ><video
+                  autoplay
+                  controls
+                  width="250"
+                  title="Click to open full-size video"
+                >
+                  <source
+                    :src="caller.cameraURL_small"
+                    type="video/mp4"
+                  /></video
+              ></a>
+              <div>Last updated at: {{ caller.lastProcessedDateTime }}</div>
               <div>
-                <a :href="marker.cameraURL_full" target="_blank"
-                  ><video
-                    autoplay
-                    controls
-                    width="250"
-                    title="Click to open full-size video"
-                  >
-                    <source
-                      :src="marker.cameraURL_small"
-                      type="video/mp4"
-                    /></video
-                ></a>
-                <div>Last updated at: {{ marker.lastProcessedDateTime }}</div>
-                <div>
-                  <a :href="marker.dashboardURL" target="_blank"
-                    >Open Dashboard</a
-                  >
-                </div>
+                <a :href="caller.dashboardURL" target="_blank"
+                  >Open Dashboard</a
+                >
               </div>
             </div>
-          </l-popup></l-marker
+          </div></l-popup
         >
-      </l-layer-group>
+      </l-feature-group>
+
+      <l-marker
+        v-for="marker in markers"
+        :key="marker.id"
+        :visible="marker.visible"
+        :lat-lng="marker.position"
+        :icon="nwisIcon"
+        @click="openPopUp(marker.center, marker)"
+      ></l-marker>
     </l-map>
     <v-card>
       <v-card-title>
@@ -69,11 +71,10 @@
         :headers="headers"
         :items="markers"
         :search="search"
-        @click:row="clickRow(markers)"
         ><template v-slot:item="{ item }">
           <tr
             :class="selectedRows.indexOf(item.id) > -1 ? 'cyan' : ''"
-            @click="rowClicked(item)"
+            @click="openPopUp(item.position, item)"
           >
             <td>{{ item.cameraName }}</td>
             <td>{{ item.id }}</td>
@@ -94,9 +95,9 @@ import {
   LTileLayer,
   LMarker,
   LPopup,
-  LLayerGroup,
   LControl,
   LControlScale,
+  LFeatureGroup,
 } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 export default {
@@ -106,9 +107,9 @@ export default {
     LTileLayer,
     LMarker,
     LPopup,
-    LLayerGroup,
     LControl,
     LControlScale,
+    LFeatureGroup,
   },
   data() {
     return {
@@ -132,6 +133,23 @@ export default {
         zoomSnap: 0.5,
       },
       showMap: true,
+      caller: {
+        id: null,
+        position: null,
+        draggable: true,
+        visible: true,
+        cameraDescription: null,
+        usgsSiteNumber: null,
+        videoNameBase: null,
+        lastProcessedDateTime: null,
+        dashboardURL: "",
+        cameraURL_full: "",
+        cameraURL_small: "",
+        cameraName: "",
+        state: null,
+        imagesBatchSize: null,
+        center: [],
+      },
       search: "",
 
       selectedRows: [],
@@ -185,6 +203,7 @@ export default {
           cameraName: "",
           state: site.state,
           imagesBatchSize: site.imagesBatchSize,
+          center: [],
         };
         tempSiteArr.position = {
           lat: site.nwis_values.lat,
@@ -200,6 +219,7 @@ export default {
           site.videoNameBase +
           "/" +
           site.videoNameBase;
+        tempSiteArr.center = [site.nwis_values.lat, site.nwis_values.lng];
         tempSiteArr.cameraURL_full = cameraURL + "_full.webm";
         tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
         let editedCameraName = site.cameraName.replace(/_/g, " ");
@@ -243,8 +263,18 @@ export default {
       alert("Alert! \n" + a.cameraName);
     },
     openPopUp(latLng, caller) {
+      /*   this.caller.cameraURL_full = caller.cameraURL_full;
+      this.caller.cameraURL_small = caller.cameraURL_small;
+      this.caller.cameraName = caller.cameraName;
+      this.caller.usgsSiteNumber = caller.usgsSiteNumber;
+      this.caller.cameraDescription = caller.cameraDescription;
+      this.caller.lastProcessedDateTime = caller.lastProcessedDateTime;
+      this.caller.cameraURL = caller.cameraURL;
+      this.caller.dashboardURL = caller.dashboardURL;
+      this.caller.id = caller.id; */
       this.caller = caller;
       this.$refs.features.mapObject.openPopup(latLng);
+      console.log("this.caller.cameraURL_full", this.caller.cameraURL_full);
     },
   },
 };
