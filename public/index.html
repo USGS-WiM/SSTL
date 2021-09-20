@@ -8,12 +8,45 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+  <style>
+    body,
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      .initial-loader {
+        position: fixed !important;
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        z-index: 5000;
+        background-color: #101010;
+        background-image: url("https://wim.usgs.gov/website-assets/branding/usgsanimated.svg");
+        display: block !important;
+        background-repeat: no-repeat;
+        background-size: 120px auto;
+        background-position: center 50%;
+      }
+      .initial-loader:after {
+        position: fixed;
+        top: 55%;
+        font-size: 22px;
+        color: white;
+        width: 100%;
+        text-align: center;
+        z-index: 5001;
+      }
+  </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+    <div id="app">    <app-root>
+        <div class="initial-loader">
+        </div>
+    </div></app-root></div>
     <!-- built files will be auto injected -->
+
   </body>
 </html>

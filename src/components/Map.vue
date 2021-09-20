@@ -10,52 +10,54 @@
       @update:zoom="zoomUpdate"
       @mousemove="getLatLng"
     >
-      <l-tile-layer :url="url" :attribution="attribution" />
+      <div id="base" class="initial-loader">
+        <l-tile-layer :url="url" :attribution="attribution" />
 
-      <l-control position="bottomleft">
-        <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
-      </l-control>
-      <l-control-scale position="bottomleft" :metric="true" />
-      <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
-      <l-feature-group ref="features">
-        <l-popup>
-          <div>
-            <h3>{{ caller.cameraName }}</h3>
-            <h4>USGS Site: {{ caller.usgsSiteNumber }}</h4>
-            <h4>{{ caller.cameraDescription }}</h4>
+        <l-control position="bottomleft">
+          <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
+        </l-control>
+        <l-control-scale position="bottomleft" :metric="true" />
+        <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
+        <l-feature-group ref="features">
+          <l-popup>
             <div>
-              <a :href="caller.cameraURL_full" target="_blank"
-                ><video
-                  id="sampleMovie"
-                  autoplay
-                  controls
-                  width="250"
-                  title="Click to open full-size video"
-                >
-                  <source
-                    id="myMovie"
-                    :src="caller.cameraURL_small"
-                    type="video/mp4"
-                  /></video
-              ></a>
-              <div>Last updated at: {{ caller.lastProcessedDateTime }}</div>
+              <h3>{{ caller.cameraName }}</h3>
+              <h4>USGS Site: {{ caller.usgsSiteNumber }}</h4>
+              <h4>{{ caller.cameraDescription }}</h4>
               <div>
-                <a :href="caller.dashboardURL" target="_blank"
-                  >Open Dashboard</a
-                >
+                <a :href="caller.cameraURL_full" target="_blank"
+                  ><video
+                    id="sampleMovie"
+                    autoplay
+                    controls
+                    width="250"
+                    title="Click to open full-size video"
+                  >
+                    <source
+                      id="myMovie"
+                      :src="caller.cameraURL_small"
+                      type="video/mp4"
+                    /></video
+                ></a>
+                <div>Last updated at: {{ caller.lastProcessedDateTime }}</div>
+                <div>
+                  <a :href="caller.dashboardURL" target="_blank"
+                    >Open Dashboard</a
+                  >
+                </div>
               </div>
-            </div>
-          </div></l-popup
-        >
-      </l-feature-group>
-      <l-marker
-        v-for="marker in markers"
-        :key="marker.id"
-        :visible="marker.visible"
-        :lat-lng="marker.position"
-        :icon="nwisIcon"
-        @click="openPopUp(marker.center, marker)"
-      ></l-marker>
+            </div></l-popup
+          >
+        </l-feature-group>
+        <l-marker
+          v-for="marker in markers"
+          :key="marker.id"
+          :visible="marker.visible"
+          :lat-lng="marker.position"
+          :icon="nwisIcon"
+          @click="openPopUp(marker.center, marker)"
+        ></l-marker>
+      </div>
     </l-map>
     <v-card>
       <v-card-title>
@@ -220,6 +222,8 @@ export default {
       }
     }
     this.markers = markerArray;
+    let backgroundDiv = document.getElementById("base");
+    backgroundDiv.classList.remove("initial-loader");
   },
   methods: {
     zoomUpdate(zoom) {
