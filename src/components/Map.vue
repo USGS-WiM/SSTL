@@ -37,9 +37,16 @@
                         type="video/mp4"
                       /></video
                   ></a>
+                  <div>Last updated at: {{ marker.lastProcessedDateTime }}</div>
+                  <div>
+                    <a :href="marker.dashboardURL" target="_blank"
+                      >Open Dashboard</a
+                    >
+                  </div>
                 </div>
-              </div> </l-popup
-          ></l-marker>
+              </div>
+            </l-popup></l-marker
+          >
         </l-layer-group>
         <l-marker :lat-lng="withPopup">
           <l-popup>
@@ -143,6 +150,7 @@ export default {
           usgsSiteNumber: site.usgsSiteNumber,
           videoNameBase: site.videoNameBase,
           lastProcessedDateTime: site.lastProcessedDateTime,
+          dashboardURL: "",
           cameraURL_full: "",
           cameraURL_small: "",
           cameraName: "",
@@ -165,8 +173,12 @@ export default {
         tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
         let editedCameraName = site.cameraName.replace(/_/g, " ");
         tempSiteArr.cameraName = editedCameraName;
-
-        console.log("tempSiteArr.cameraName", tempSiteArr.cameraName);
+        tempSiteArr.dashboardURL =
+          "https://apps.usgs.gov/sstl/camera/" +
+          site.usgsSiteNumber +
+          "_" +
+          site.videoNameBase;
+        console.log("cameraURL", tempSiteArr.dashboardURL);
       }
     }
     console.log("markerArray", markerArray);
