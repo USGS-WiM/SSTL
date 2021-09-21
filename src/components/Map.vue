@@ -170,11 +170,18 @@ export default {
     };
   },
   async created() {
+    //to be populated with data for all camera sites
     let markerArray = [];
-    const response2 = await fetch(
+
+    //get camera data
+    const response = await fetch(
       "https://apps.usgs.gov/sstl/php/getAllEnabledCameras.php"
     );
-    let cameraJSON = await response2.json();
+
+    //camera data
+    let cameraJSON = await response.json();
+
+    //loop through camera data to prepare for populating map
     for (let i = 0; i < cameraJSON.data.length; i++) {
       let site = cameraJSON.data[i];
       if (site.nwis_values) {
@@ -202,6 +209,8 @@ export default {
         };
         tempSiteArr.id = cameraID;
         markerArray.push(tempSiteArr);
+
+        //these urls are for the camera live feed and links in popup
         let cameraURL =
           "https://apps.usgs.gov/sstl/media/cameras/" +
           site.usgsSiteNumber +
@@ -222,6 +231,8 @@ export default {
       }
     }
     this.markers = markerArray;
+
+    //remove the loader
     let backgroundDiv = document.getElementById("base");
     backgroundDiv.classList.remove("initial-loader");
   },
@@ -231,12 +242,6 @@ export default {
     },
     centerUpdate(center) {
       this.currentCenter = center;
-    },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
-    },
-    innerClick() {
-      alert("Click!");
     },
     getLatLng: function(event) {
       this.lat = parseFloat(event.latlng.lat).toFixed(6);
