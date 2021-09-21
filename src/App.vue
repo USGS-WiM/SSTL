@@ -1,13 +1,15 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <v-app-bar-nav-icon
-        @click="drawerState = !drawerState"
-      ></v-app-bar-nav-icon
-      ><img
+      <a
+        href="https://www.usgs.gov/"
+        target="_blank"
         style="height: 90%; margin-right: 20px; "
-        src="./assets/USGS_Green_web.png"
-      />
+        ><img
+          src="./assets/USGS_Green_web.png"
+          style="height: 100%;
+        margin-right: 20px;"
+      /></a>
       <v-toolbar-title>Storm Summary Time-Lapse</v-toolbar-title>
     </v-app-bar>
     <Map></Map>
