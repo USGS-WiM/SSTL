@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <Sidebar></Sidebar>
     <v-app-bar app>
       <v-app-bar-nav-icon
         @click="drawerState = !drawerState"
@@ -18,10 +17,8 @@
 <script>
 // imports
 import Map from "./components/Map";
-import Sidebar from "./components/Sidebar";
 export default {
   components: {
-    Sidebar,
     Map,
   },
   computed: {
