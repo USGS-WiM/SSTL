@@ -14,11 +14,7 @@
         <l-tile-layer :url="url" :attribution="attribution" />
 
         <l-control position="bottomleft">
-          <div
-            style="background-color: rgba(255, 255, 255, .60); padding: 2px 3px 2px 3px; margin-left: -3px"
-          >
-            Latitude: {{ lat }}, Longitude: {{ long }}
-          </div>
+          <div class="latlng">Latitude: {{ lat }}, Longitude: {{ long }}</div>
         </l-control>
         <l-control-scale position="bottomleft" :metric="true" />
         <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
@@ -221,6 +217,7 @@ export default {
 <style scoped>
 /*placing "scoped" after style affects only the current file*/
 @import "../styles/markers.css";
+@import "../styles/sstlMap.css";
 button {
   background-color: #eceef3;
   border-radius: 0;
