@@ -14,7 +14,11 @@
         <l-tile-layer :url="url" :attribution="attribution" />
 
         <l-control position="bottomleft">
-          <button>Latitude: {{ lat }}, Longitude: {{ long }}</button>
+          <div
+            style="background-color: rgba(255, 255, 255, .60); padding: 2px 3px 2px 3px; margin-left: -3px"
+          >
+            Latitude: {{ lat }}, Longitude: {{ long }}
+          </div>
         </l-control>
         <l-control-scale position="bottomleft" :metric="true" />
         <!-- markers (these ones use custom wim divIcon styling not leaflet default) -->
