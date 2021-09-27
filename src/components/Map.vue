@@ -5,7 +5,7 @@
       :zoom="zoom"
       :center="center"
       :options="mapOptions"
-      style="height: 80%"
+      style="height: 100%"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
       @mousemove="getLatLng"
@@ -59,35 +59,6 @@
         ></l-marker>
       </div>
     </l-map>
-    <v-card>
-      <v-card-title>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
-        v-model="selectedRows"
-        :headers="headers"
-        :items="markers"
-        :search="search"
-        ><template v-slot:item="{ item }">
-          <tr
-            :class="selectedRows.indexOf(item.id) > -1 ? 'cyan' : ''"
-            @click="openPopUp(item.position, item)"
-          >
-            <td>{{ item.cameraName }}</td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.state }}</td>
-            <td>{{ item.lastProcessedDateTime }}</td>
-            <td>{{ item.imagesBatchSize }}</td>
-          </tr>
-        </template>
-      </v-data-table>
-    </v-card>
   </v-main>
 </template>
 
@@ -153,20 +124,6 @@ export default {
         imagesBatchSize: null,
         center: [],
       },
-      search: "",
-      selectedRows: [],
-      headers: [
-        {
-          text: "Camera Name",
-          align: "start",
-          sortable: true,
-          value: "cameraName",
-        },
-        { text: "USGS Site", value: "id" },
-        { text: "State", value: "state" },
-        { text: "Last Processed Time", value: "lastProcessedDateTime" },
-        { text: "Img Batch Size", value: "imagesBatchSize" },
-      ],
     };
   },
   async created() {
