@@ -46,7 +46,7 @@
                       type="video/mp4"
                     /></video
                 ></a>
-                <div>Last updated at: {{ caller.lastProcessedDateTime }}</div>
+                <div>Last updated at: {{ caller.dateTime }}</div>
                 <div>
                   <a :href="caller.dashboardURL" target="_blank"
                     >Details Page</a
@@ -122,7 +122,7 @@ export default {
         cameraDescription: null,
         usgsSiteNumber: null,
         videoNameBase: null,
-        lastProcessedDateTime: null,
+        dateTime: null,
         dashboardURL: "",
         cameraURL_full: "",
         cameraURL_small: "",
@@ -158,7 +158,7 @@ export default {
           cameraDescription: site.cameraDescription,
           usgsSiteNumber: site.usgsSiteNumber,
           videoNameBase: site.videoNameBase,
-          lastProcessedDateTime: site.lastProcessedDateTime,
+          dateTime: null,
           dashboardURL: "",
           cameraURL_full: "",
           cameraURL_small: "",
@@ -183,6 +183,10 @@ export default {
           site.videoNameBase +
           "/" +
           site.videoNameBase;
+        let tempDateTime = new Date(site.mostRecentImageDateTime);
+        tempDateTime = tempDateTime.toLocaleString();
+
+        tempSiteArr.dateTime = tempDateTime;
         tempSiteArr.center = [site.nwis_values.lat, site.nwis_values.lng];
         tempSiteArr.cameraURL_full = cameraURL + "_full.webm";
         tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
