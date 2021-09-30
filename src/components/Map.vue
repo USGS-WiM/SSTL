@@ -46,7 +46,7 @@
                       type="video/mp4"
                     /></video
                 ></a>
-                <div>Last updated at: {{ caller.dateTime }}</div>
+                <div>Last updated on: {{ caller.dateTime }}</div>
                 <div>
                   <a :href="caller.dashboardURL" target="_blank"
                     >Details Page</a
