@@ -183,10 +183,15 @@ export default {
           site.videoNameBase +
           "/" +
           site.videoNameBase;
-        let tempDateTime = new Date(site.mostRecentImageDateTime);
-        tempDateTime = tempDateTime.toLocaleString();
+        if (site.mostRecentImageDateTime) {
+          let tempDateTime = new Date(site.mostRecentImageDateTime);
+          tempDateTime = tempDateTime.toLocaleString();
+          tempSiteArr.dateTime = tempDateTime;
+        }
+        if (!site.mostRecentImageDateTime) {
+          tempSiteArr.dateTime = "Date not available";
+        }
 
-        tempSiteArr.dateTime = tempDateTime;
         tempSiteArr.center = [site.nwis_values.lat, site.nwis_values.lng];
         tempSiteArr.cameraURL_full = cameraURL + "_full.webm";
         tempSiteArr.cameraURL_small = cameraURL + "_small.webm";
