@@ -22,7 +22,14 @@
           <l-popup>
             <div>
               <h3>{{ caller.cameraName }}</h3>
-              <h4>USGS Site: {{ caller.usgsSiteNumber }}</h4>
+              <div>
+                <h4>
+                  USGS Site:
+                  <a :href="caller.nexGenLink" target="_blank">{{
+                    caller.usgsSiteNumber
+                  }}</a>
+                </h4>
+              </div>
               <h4>{{ caller.cameraDescription }}</h4>
               <div>
                 <a :href="caller.cameraURL_full" target="_blank"
@@ -42,7 +49,7 @@
                 <div>Last updated at: {{ caller.lastProcessedDateTime }}</div>
                 <div>
                   <a :href="caller.dashboardURL" target="_blank"
-                    >Open Dashboard</a
+                    >Details Page</a
                   >
                 </div>
               </div>
@@ -159,6 +166,7 @@ export default {
           state: site.state,
           imagesBatchSize: site.imagesBatchSize,
           center: [],
+          nexGenLink: "",
         };
         tempSiteArr.position = {
           lat: site.nwis_values.lat,
@@ -185,6 +193,9 @@ export default {
           site.usgsSiteNumber +
           "_" +
           site.videoNameBase;
+        tempSiteArr.nexGenLink =
+          "https://waterdata.usgs.gov/monitoring-location/" +
+          site.usgsSiteNumber;
       }
     }
     this.markers = markerArray;
